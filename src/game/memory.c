@@ -64,6 +64,7 @@ struct MainPoolBlock *sPoolListHeadR;
 
 
 static struct MainPoolState *gMainPoolState = NULL;
+omm_patch__memory__main_pool_state
 
 uintptr_t set_segment_base_addr(s32 segment, void *addr) {
     sSegmentTable[segment] = (uintptr_t) addr & 0x1FFFFFFF;

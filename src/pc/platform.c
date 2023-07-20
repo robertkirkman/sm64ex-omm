@@ -92,6 +92,56 @@ void sys_fatal(const char *fmt, ...) {
 // we can just ask SDL for most of this shit if we have it
 #include <SDL2/SDL.h>
 
+#ifdef __ANDROID__
+#include "platform.h"
+// The purpose of this code is to store/use the game data in /storage/emulated/0
+// instead of /storage/emulated/0/Android/data if the user permits it, which
+// results in Android not deleting the game data when the app is uninstalled
+// This feature was written to accomodate a user who "is unable to install
+// updates to apps without first uninstalling the older version, no matter
+// which app it is". It is also very useful for people (like me) who 
+// frequently switch between the cross-compilation and the Termux build on
+// the same device, which necessitates uninstalling the other build's app.
+const char *get_gamedir(void) {
+    SDL_bool privileged_write = SDL_FALSE, privileged_manage = SDL_FALSE;
+    static char gamedir_unprivileged[SYS_MAX_PATH] = { 0 }, gamedir_privileged[SYS_MAX_PATH] = { 0 };
+    const char *basedir_unprivileged = SDL_AndroidGetExternalStoragePath();
+    const char *basedir_privileged = SDL_AndroidGetTopExternalStoragePath();
+
+    snprintf(gamedir_unprivileged, sizeof(gamedir_unprivileged), 
+             "%s", basedir_unprivileged);
+    snprintf(gamedir_privileged, sizeof(gamedir_privileged), 
+             "%s/%s", basedir_privileged, ANDROID_APPNAME);
+
+    //Android 10 and below
+    privileged_write = SDL_AndroidRequestPermission("android.permission.WRITE_EXTERNAL_STORAGE");
+    //Android 11 and up
+    privileged_manage = SDL_AndroidRequestPermission("android.permission.MANAGE_EXTERNAL_STORAGE");
+    return (privileged_write || privileged_manage) ? gamedir_privileged : gamedir_unprivileged;
+}
+
+const char *sys_user_path(void) {
+    static char path[SYS_MAX_PATH] = { 0 };
+
+    const char *basedir = get_gamedir();
+    snprintf(path, sizeof(path), "%s/user", basedir);
+
+    if (!fs_sys_dir_exists(path) && !fs_sys_mkdir(path))
+        path[0] = 0; // somehow failed, we got no user path
+    return path;
+}
+
+const char *sys_exe_path(void) {
+    static char path[SYS_MAX_PATH] = { 0 };
+
+    const char *basedir = get_gamedir();
+    snprintf(path, sizeof(path), "%s", basedir);
+
+    if (!fs_sys_dir_exists(path) && !fs_sys_mkdir(path))
+        path[0] = 0; // somehow failed, we got no exe path
+    return path;
+}
+#else
 // TEMPORARY: check the old save folder and copy contents to the new path
 // this will be removed after a while
 static inline bool copy_userdata(const char *userdir) {
@@ -159,6 +209,7 @@ const char *sys_exe_path(void) {
     }
     return path;
 }
+#endif
 
 static void sys_fatal_impl(const char *msg) {
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR , "Fatal error", msg, NULL);

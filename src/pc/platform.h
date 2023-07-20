@@ -8,6 +8,10 @@
 
 /* Platform-specific functions and whatnot */
 
+#ifdef __ANDROID__
+#define ANDROID_APPNAME "com.owokitty.sm64exomm"
+#endif
+
 #define SYS_MAX_PATH 1024 // FIXME: define this on different platforms
 
 // NULL terminated list of platform specific read-only data paths
@@ -20,6 +24,9 @@ int sys_strcasecmp(const char *s1, const char *s2);
 void sys_sleep(const uint64_t us);
 
 // path stuff
+#ifdef __ANDROID__
+const char* get_gamedir(void);
+#endif
 const char *sys_user_path(void);
 const char *sys_exe_path(void);
 const char *sys_file_extension(const char *fpath);

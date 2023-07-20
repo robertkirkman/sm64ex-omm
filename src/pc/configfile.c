@@ -14,6 +14,10 @@
 #include "controller/controller_api.h"
 #include "fs/fs.h"
 
+#ifdef TOUCH_CONTROLS
+#include "pc/controller/controller_touchscreen.h"
+#endif
+
 #define ARRAY_LEN(arr) (sizeof(arr) / sizeof(arr[0]))
 
 enum ConfigOptionType {
@@ -45,7 +49,7 @@ ConfigWindow configWindow       = {
     .h = DESIRED_SCREEN_HEIGHT,
     .vsync = 1,
     .reset = false,
-    .fullscreen = false,
+    .fullscreen = true,
     .exiting_fullscreen = false,
     .settings_changed = false,
 };
@@ -56,12 +60,12 @@ unsigned int configSfxVolume = MAX_VOLUME;
 unsigned int configEnvVolume = MAX_VOLUME;
 
 // Keyboard mappings (VK_ values, by default keyboard/gamepad/mouse)
-unsigned int configKeyA[MAX_BINDS]          = { 0x0026,   0x1000,     0x1103     };
-unsigned int configKeyB[MAX_BINDS]          = { 0x0033,   0x1002,     0x1101     };
+unsigned int configKeyA[MAX_BINDS]          = { 0x0026,   0x1000,     VK_INVALID };
+unsigned int configKeyB[MAX_BINDS]          = { 0x0033,   0x1002,     VK_INVALID };
 unsigned int configKeyStart[MAX_BINDS]      = { 0x0039,   0x1006,     VK_INVALID };
-unsigned int configKeyL[MAX_BINDS]          = { 0x002A,   0x1009,     0x1104     };
-unsigned int configKeyR[MAX_BINDS]          = { 0x0036,   0x100A,     0x101B     };
-unsigned int configKeyZ[MAX_BINDS]          = { 0x0025,   0x1007,     0x101A     };
+unsigned int configKeyL[MAX_BINDS]          = { 0x002A,   0x1009,     VK_INVALID };
+unsigned int configKeyR[MAX_BINDS]          = { 0x0036,   0x100A,     VK_INVALID };
+unsigned int configKeyZ[MAX_BINDS]          = { 0x0025,   0x101A,     VK_INVALID };
 unsigned int configKeyCUp[MAX_BINDS]        = { 0x0148,   VK_INVALID, VK_INVALID };
 unsigned int configKeyCDown[MAX_BINDS]      = { 0x0150,   VK_INVALID, VK_INVALID };
 unsigned int configKeyCLeft[MAX_BINDS]      = { 0x014B,   VK_INVALID, VK_INVALID };
@@ -81,12 +85,12 @@ unsigned int configCameraXSens   = 50;
 unsigned int configCameraYSens   = 50;
 unsigned int configCameraAggr    = 0;
 unsigned int configCameraPan     = 0;
-unsigned int configCameraDegrade = 10; // 0 - 100%
+unsigned int configCameraDegrade = 100; // 0 - 100%
 bool         configCameraInvertX = true;
 bool         configCameraInvertY = false;
-bool         configEnableCamera  = false;
+bool         configEnableCamera  = true;
 bool         configCameraAnalog  = true;
-bool         configCameraMouse   = false;
+bool         configCameraMouse   = true;
 #endif
 bool         configSkipIntro     = 0;
 bool         configHUD           = true;
@@ -141,6 +145,83 @@ static const struct ConfigOption options[] = {
     #ifdef DISCORDRPC
     {.name = "discordrpc_enable",    .type = CONFIG_TYPE_BOOL, .boolValue = &configDiscordRPC},
     #endif 
+#ifdef TOUCH_CONTROLS
+    {.name = "touch_stick_x",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_STICK].x},
+    {.name = "touch_stick_y",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_STICK].y},
+    {.name = "touch_stick_size",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_STICK].size},
+    {.name = "touch_stick_anchor",       .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_STICK].anchor},
+    {.name = "touch_mouse_x",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_MOUSE].x},
+    {.name = "touch_mouse_y",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_MOUSE].y},
+    {.name = "touch_mouse_size",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_MOUSE].size},
+    {.name = "touch_mouse_anchor",       .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_MOUSE].anchor},
+    {.name = "touch_a_x",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_A].x},
+    {.name = "touch_a_y",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_A].y},
+    {.name = "touch_a_size",             .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_A].size},
+    {.name = "touch_a_anchor",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_A].anchor},
+    {.name = "touch_b_x",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_B].x},
+    {.name = "touch_b_y",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_B].y},
+    {.name = "touch_b_size",             .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_B].size},
+    {.name = "touch_b_anchor",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_B].anchor},
+    {.name = "touch_x_x",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_X].x},
+    {.name = "touch_x_y",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_X].y},
+    {.name = "touch_x_size",             .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_X].size},
+    {.name = "touch_x_anchor",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_X].anchor},
+    {.name = "touch_y_x",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Y].x},
+    {.name = "touch_y_y",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Y].y},
+    {.name = "touch_y_size",             .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Y].size},
+    {.name = "touch_y_anchor",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Y].anchor},
+    {.name = "touch_start_x",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_START].x},
+    {.name = "touch_start_y",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_START].y},
+    {.name = "touch_start_size",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_START].size},
+    {.name = "touch_start_anchor",       .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_START].anchor},
+    {.name = "touch_l_x",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_L].x},
+    {.name = "touch_l_y",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_L].y},
+    {.name = "touch_l_size",             .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_L].size},
+    {.name = "touch_l_anchor",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_L].anchor},
+    {.name = "touch_r_x",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_R].x},
+    {.name = "touch_r_y",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_R].y},
+    {.name = "touch_r_size",             .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_R].size},
+    {.name = "touch_r_anchor",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_R].anchor},
+    {.name = "touch_z_x",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Z].x},
+    {.name = "touch_z_y",                .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Z].y},
+    {.name = "touch_z_size",             .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Z].size},
+    {.name = "touch_z_anchor",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_Z].anchor},
+    {.name = "touch_cup_x",              .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CUP].x},
+    {.name = "touch_cup_y",              .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CUP].y},
+    {.name = "touch_cup_size",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CUP].size},
+    {.name = "touch_cup_anchor",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CUP].anchor},
+    {.name = "touch_cdown_x",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CDOWN].x},
+    {.name = "touch_cdown_y",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CDOWN].y},
+    {.name = "touch_cdown_size",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CDOWN].size},
+    {.name = "touch_cdown_anchor",       .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CDOWN].anchor},
+    {.name = "touch_cleft_x",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CLEFT].x},
+    {.name = "touch_cleft_y",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CLEFT].y},
+    {.name = "touch_cleft_size",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CLEFT].size},
+    {.name = "touch_cleft_anchor",       .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CLEFT].anchor},
+    {.name = "touch_cright_x",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CRIGHT].x},
+    {.name = "touch_cright_y",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CRIGHT].y},
+    {.name = "touch_cright_size",        .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CRIGHT].size},
+    {.name = "touch_cright_anchor",      .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_CRIGHT].anchor},
+    {.name = "touch_dup_x",              .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DUP].x},
+    {.name = "touch_dup_y",              .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DUP].y},
+    {.name = "touch_dup_size",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DUP].size},
+    {.name = "touch_dup_anchor",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DUP].anchor},
+    {.name = "touch_ddown_x",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DDOWN].x},
+    {.name = "touch_ddown_y",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DDOWN].y},
+    {.name = "touch_ddown_size",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DDOWN].size},
+    {.name = "touch_ddown_anchor",       .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DDOWN].anchor},
+    {.name = "touch_dleft_x",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DLEFT].x},
+    {.name = "touch_dleft_y",            .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DLEFT].y},
+    {.name = "touch_dleft_size",         .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DLEFT].size},
+    {.name = "touch_dleft_anchor",       .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DLEFT].anchor},
+    {.name = "touch_dright_x",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DRIGHT].x},
+    {.name = "touch_dright_y",           .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DRIGHT].y},
+    {.name = "touch_dright_size",        .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DRIGHT].size},
+    {.name = "touch_dright_anchor",      .type = CONFIG_TYPE_BIND, .uintValue = configControlElements[TOUCH_DRIGHT].anchor},
+    {.name = "touch_autohide",           .type = CONFIG_TYPE_BOOL, .boolValue = &configAutohideTouch},
+    {.name = "touch_slide",              .type = CONFIG_TYPE_BOOL, .boolValue = &configSlideTouch},
+    {.name = "touch_snap",               .type = CONFIG_TYPE_BOOL, .boolValue = &configElementSnap},
+#endif
 };
 
 // Reads an entire line from a file (excluding the newline character) and returns an allocated string

@@ -10,6 +10,9 @@
 #include "engine/surface_collision.h"
 #include "pc/configfile.h"
 #include "pc/controller/controller_mouse.h"
+#ifdef TOUCH_CONTROLS
+#include "pc/controller/controller_touchscreen.h"
+#endif
 
 #if defined(__MINGW32__) && !defined(__MINGW64_VERSION_MAJOR) 
 //quick and dirty fix for some older MinGW.org mingwrt
@@ -379,8 +382,13 @@ static void newcam_rotate_button(void) {
     }
 
     if (newcam_mouse == 1) {
+#ifdef TOUCH_CONTROLS
+        newcam_yaw += ivrt(0) * touch_x * 2 * configCameraXSens;
+        newcam_tilt += ivrt(1) * touch_y * 2 * configCameraYSens;
+#else
         newcam_yaw += ivrt(0) * mouse_x * 16;
         newcam_tilt += ivrt(1) * mouse_y * 16;
+#endif
     }
 }
 

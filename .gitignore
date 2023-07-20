@@ -81,3 +81,9 @@ sm64config.txt
 
 # macOS bullcrap directory settings file thats autocreated
 .DS_Store
+
+# Android files
+!/textures/touchcontrols/*.png
+!platform/android/android/**/*.so
+platform/android/android/lib/*/libc++_shared.so
+platform/android/android/lib/*/libmain.so

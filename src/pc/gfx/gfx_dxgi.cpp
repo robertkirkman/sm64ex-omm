@@ -75,6 +75,7 @@ static struct {
     bool (*on_key_up)(int scancode);
     void (*on_all_keys_up)(void);
 } dxgi;
+#include "data/omm/engine/gfx_dxgi.inl"
 
 static void load_dxgi_library(void) {
     dxgi.dxgi_module = LoadLibraryW(L"dxgi.dll");

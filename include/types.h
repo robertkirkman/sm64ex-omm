@@ -106,6 +106,7 @@ struct GraphNode
     /*0x08*/ struct GraphNode *next;
     /*0x0C*/ struct GraphNode *parent;
     /*0x10*/ struct GraphNode *children;
+omm_GraphNode_extra_fields
 };
 
 // struct AnimInfo?
@@ -118,6 +119,7 @@ struct GraphNodeObject_sub
     /*0x0A 0x42*/ u16 animTimer;
     /*0x0C 0x44*/ s32 animFrameAccelAssist;
     /*0x10 0x48*/ s32 animAccel;
+omm_AnimInfo_extra_fields
 };
 
 struct GraphNodeObject
@@ -133,6 +135,7 @@ struct GraphNodeObject
     /*0x4C*/ struct SpawnInfo *unk4C;
     /*0x50*/ Mat4 *throwMatrix; // matrix ptr
     /*0x54*/ Vec3f cameraToObject;
+omm_GraphNodeObject_extra_fields
 };
 
 struct ObjectNode

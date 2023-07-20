@@ -961,6 +961,7 @@ void reset_dialog_render_state(void) {
 #define Y_VAL2 5.0f
 #endif
 
+#if 0 // ingame_menu.c [0]
 void render_dialog_box_type(struct DialogEntry *dialog, s8 linesPerBox) {
     UNUSED s32 unused;
 
@@ -992,6 +993,7 @@ void render_dialog_box_type(struct DialogEntry *dialog, s8 linesPerBox) {
     gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
 }
 
+#endif // ingame_menu.c [0]
 void change_and_flash_dialog_text_color_lines(s8 colorMode, s8 lineNum) {
     u8 colorFade;
 
@@ -1770,6 +1772,7 @@ void render_dialog_entries(void) {
             break;
         case DIALOG_STATE_HORIZONTAL:
             gDialogScrollOffsetY += dialog->linesPerBox * 2;
+omm_patch__render_dialog_entries__fix_dialog_box_text_lower_bound
 
             if (gDialogScrollOffsetY >= dialog->linesPerBox * DIAG_VAL1) {
                 gDialogTextPos = gLastDialogPageStrPos;

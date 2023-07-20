@@ -1,3 +1,5 @@
+#define static
+#define const
 // Mario Cap (Normal Cap, Metal, Winged, etc)
 
 // 0x0301CF08

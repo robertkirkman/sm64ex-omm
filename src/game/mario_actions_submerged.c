@@ -49,6 +49,7 @@ static s32 swimming_near_surface(struct MarioState *m) {
     return (m->waterLevel - 80) - m->pos[1] < 400.0f;
 }
 
+#if 0 // mario_actions_submerged.c [0]
 static f32 get_buoyancy(struct MarioState *m) {
     f32 buoyancy = 0.0f;
 
@@ -194,6 +195,7 @@ static u32 perform_water_step(struct MarioState *m) {
     return stepResult;
 }
 
+#endif // mario_actions_submerged.c [0]
 static BAD_RETURN(u32) update_water_pitch(struct MarioState *m) {
     struct Object *marioObj = m->marioObj;
 

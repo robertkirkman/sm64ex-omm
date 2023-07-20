@@ -240,6 +240,7 @@ struct Object *allocate_object(struct ObjectNode *objList) {
     obj->prevObj = NULL;
     obj->collidedObjInteractTypes = 0;
     obj->numCollidedObjs = 0;
+memset(&obj->header.gfx._oFields, 0, sizeof(obj->header.gfx._oFields));
 
 #if IS_64_BIT
     for (i = 0; i < 0x50; i++) {

@@ -782,6 +782,7 @@ void create_next_audio_buffer(s16 *samples, u32 num_samples) {
 #endif
 
 void play_sound(s32 soundBits, f32 *pos) {
+omm_patch__play_sound__play_character_sound
     sSoundRequests[sSoundRequestCount].soundBits = soundBits;
     sSoundRequests[sSoundRequestCount].position = pos;
     sSoundRequestCount++;
@@ -2131,6 +2132,7 @@ void stop_background_music(u16 seqId) {
     // If sequence is not found, remove an empty queue item (the next empty
     // queue slot).
     foundIndex = sBackgroundMusicQueueSize;
+omm_patch__stop_background_music__fix_boss_music
 
     // Search for the sequence.
     for (i = 0; i < sBackgroundMusicQueueSize; i++) {

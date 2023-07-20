@@ -30,7 +30,7 @@ void bhv_piranha_plant_bubble_loop(void) {
     struct Object *parent = o->parentObj; // the Piranha Plant
     f32 scale = 0;
     s32 i;
-    s32 frame = parent->header.gfx.unk38.animFrame;
+    s16 frame = parent->header.gfx.unk38.animFrame;
     // TODO: rename lastFrame if it is inaccurate
     s32 lastFrame = parent->header.gfx.unk38.curAnim->unk08 - 2;
     s32 UNUSED unused;
@@ -38,6 +38,10 @@ void bhv_piranha_plant_bubble_loop(void) {
     f32 beginGrowingFrame;  // the frame just before growing begins
 
     cur_obj_set_pos_relative(parent, 0, 72.0f, 180.0f);
+
+#if defined(__clang__) // Hack: This fixes weird crash in clang (TARGET_ANDROID)
+    if (frame == -1) frame = 0;
+#endif
 
     switch (o->oAction) {
         case PIRANHA_PLANT_BUBBLE_ACT_IDLE:
@@ -66,7 +70,7 @@ void bhv_piranha_plant_bubble_loop(void) {
                     // Note that the bubble always starts this loop at its largest.
                     if (frame < doneShrinkingFrame) {
                         // Shrink from 5.0f to 1.0f.
-                        scale = coss(frame / doneShrinkingFrame * 0x4000) * 4.0f + 1.0;
+                        scale = coss(frame / doneShrinkingFrame * 0x4000) * 4.0f + 1.0f;
                     } else if (frame > beginGrowingFrame) {
                         // Grow from 1.0f to 5.0f.
                         scale = sins((
@@ -74,7 +78,7 @@ void bhv_piranha_plant_bubble_loop(void) {
                                          (frame - (lastFrame / 2.0f + 4.0f)) / beginGrowingFrame)
                                      * 0x4000)
                                     * 4.0f
-                                + 1.0;
+                                + 1.0f;
                     } else {
                         // Stay at 1.0f for a few frames.
                         scale = 1.0f;

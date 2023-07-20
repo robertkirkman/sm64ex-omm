@@ -158,6 +158,10 @@ ALIGNED8 static const u8 texture_hud_char_Y[] = {
 ALIGNED8 static const u8 texture_hud_char_Z[] = {
 #include "textures/segment2/segment2.04600.rgba16.inc.c"
 };
+#else
+ALIGNED8 static const u8 texture_hud_char_Z[] = {
+#include "textures/segment2/segment2.04600_custom.rgba16.inc.c"
+};
 #endif
 
 ALIGNED8 static const u8 texture_hud_char_apostrophe[] = {
@@ -223,6 +227,58 @@ ALIGNED8 static const u8 texture_hud_char_beta_key[] = {
 #include "textures/segment2/segment2.06000.rgba16.inc.c"
 };
 #endif
+
+ALIGNED8 const u8 texture_hud_up[] = {
+#include "textures/segment2/custom_hud_up.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_down[] = {
+#include "textures/segment2/custom_hud_down.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_left[] = {
+#include "textures/segment2/custom_hud_left.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_right[] = {
+#include "textures/segment2/custom_hud_right.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_snap[] = {
+#include "textures/segment2/custom_hud_snap.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_check[] = {
+#include "textures/segment2/custom_hud_check.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_cross[] = {
+#include "textures/segment2/custom_hud_cross.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_reset[] = {
+#include "textures/segment2/custom_hud_reset.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_trash[] = {
+#include "textures/segment2/custom_hud_trash.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_cup[] = {
+#include "textures/segment2/custom_hud_cup.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_cdown[] = {
+#include "textures/segment2/custom_hud_cdown.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_cleft[] = {
+#include "textures/segment2/custom_hud_cleft.rgba16.inc.c"
+};
+
+ALIGNED8 const u8 texture_hud_cright[] = {
+#include "textures/segment2/custom_hud_cright.rgba16.inc.c"
+};
 
 ALIGNED8 static const u8 texture_credits_char_3[] = {
 #include "textures/segment2/segment2.06200.rgba16.inc.c"
@@ -1827,11 +1883,11 @@ const u8 *const main_hud_lut[] = {
     texture_hud_char_K, texture_hud_char_L, texture_hud_char_M, texture_hud_char_N,
     texture_hud_char_O, texture_hud_char_P,               0x0, texture_hud_char_R,
     texture_hud_char_S, texture_hud_char_T, texture_hud_char_U,               0x0,
-    texture_hud_char_W,               0x0, texture_hud_char_Y,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0,               0x0,               0x0,
-                  0x0,               0x0, texture_hud_char_multiply, texture_hud_char_coin,
+    texture_hud_char_W,                0x0, texture_hud_char_Y, texture_hud_char_Z,
+    texture_hud_cup,    texture_hud_cdown,  texture_hud_cleft,  texture_hud_cright,
+    texture_hud_snap,   texture_hud_check,  texture_hud_cross,  texture_hud_reset,
+    texture_hud_trash,  texture_hud_up,     texture_hud_down,   texture_hud_left,
+    texture_hud_right,                 0x0, texture_hud_char_multiply, texture_hud_char_coin,
     texture_hud_char_mario_head, texture_hud_char_star,               0x0,               0x0,
     texture_hud_char_apostrophe, texture_hud_char_double_quote,
 #else

@@ -29,6 +29,7 @@
 #include <PR/os_ai.h>
 #include <PR/libaudio.h>
 #include <PR/libultra.h>
+#include "data/omm/omm_macros.h"
 
 #if defined(__MINGW32__)
 #include <_mingw.h>

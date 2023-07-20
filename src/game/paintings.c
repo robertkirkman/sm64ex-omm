@@ -885,6 +885,7 @@ Gfx *render_painting(u8 *img, s16 tWidth, s16 tHeight, s16 *textureMap, s16 mapV
     }
 
     // Draw the triangles individually
+omm_patch__render_painting__interpolate_painting
     gSPVertex(gfx++, VIRTUAL_TO_PHYSICAL(verts + triGroups * 15), remGroupTris * 3, 0);
     for (group = 0; group < remGroupTris; group++) {
         gSP1Triangle(gfx++, group * 3, group * 3 + 1, group * 3 + 2, 0);
@@ -1262,6 +1263,7 @@ Gfx *geo_painting_update(s32 callContext, UNUSED struct GraphNode *node, UNUSED 
         gPaintingUpdateCounter = gAreaUpdateCounter;
     } else {
         gLastPaintingUpdateCounter = gPaintingUpdateCounter;
+omm_patch__geo_painting_update__fix_floor_pointer
         gPaintingUpdateCounter = gAreaUpdateCounter;
 
         // Store Mario's floor and position

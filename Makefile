@@ -24,6 +24,9 @@ NON_MATCHING ?= 1
 # Build and optimize for Raspberry Pi(s)
 TARGET_RPI ?= 0
 
+# Build for Android
+TARGET_ANDROID ?= 0
+
 # Build for Emscripten/WebGL
 TARGET_WEB ?= 0
 
@@ -51,6 +54,8 @@ TEXTSAVES ?= 0
 EXTERNAL_DATA ?= 0
 # Enable Discord Rich Presence
 DISCORDRPC ?= 0
+# Enable touchscreen controls
+TOUCH_CONTROLS ?= 0
 
 # Various workarounds for weird toolchains
 
@@ -93,6 +98,16 @@ ifeq ($(TARGET_WEB),0)
   ifeq ($(HOST_OS),Windows)
     WINDOWS_BUILD := 1
   endif
+endif
+
+# Attempt to detect Termux Android build
+ifneq ($(shell which termux-setup-storage),)
+  TARGET_ANDROID := 1
+endif
+
+# Attempt to detect 32-bit
+ifneq ($(shell uname -m | grep -e i386 -e i686 -e arm -e armhf -e armv6l -e armv7l -e armv8l -e armv8b),)
+  TARGET_BITS = 32
 endif
 
 # MXE overrides
@@ -218,6 +233,10 @@ ifeq ($(TARGET_RPI),1) # Define RPi to change SDL2 title & GLES2 hints
       VERSION_CFLAGS += -DUSE_GLES
 endif
 
+ifeq ($(TARGET_ANDROID),1)
+      DEFINES += TARGET_ANDROID=1 USE_GLES=1 _LANGUAGE_C=1
+endif
+
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
      VERSION_CFLAGS += -DOSX_BUILD
 endif
@@ -288,12 +307,16 @@ endif
 LIBULTRA := $(BUILD_DIR)/libultra.a
 
 ifeq ($(TARGET_WEB),1)
-EXE := $(BUILD_DIR)/$(TARGET).html
-	else
+  EXE := $(BUILD_DIR)/$(TARGET).html
+else
 	ifeq ($(WINDOWS_BUILD),1)
-		EXE := $(BUILD_DIR)/$(TARGET).exe
-
-		else # Linux builds/binary namer
+    EXE := $(BUILD_DIR)/$(TARGET).exe
+  else ifeq ($(TARGET_ANDROID),1)
+    EXE := $(BUILD_DIR)/libmain.so
+    ZIP_UNCOMPRESSED := $(BUILD_DIR)/$(TARGET).uncompressed.zip
+    APK_ALIGNED := $(BUILD_DIR)/$(TARGET).aligned.apk
+    APK_SIGNED := $(BUILD_DIR)/$(TARGET).apk
+  else # Linux builds/binary namer
 		ifeq ($(TARGET_RPI),1)
 			EXE := $(BUILD_DIR)/$(TARGET).arm
 		else
@@ -316,10 +339,15 @@ LEVEL_DIRS := $(patsubst levels/%,%,$(dir $(wildcard levels/*/header.h)))
 SRC_DIRS := src src/engine src/game src/audio src/menu src/buffers actors levels bin data assets src/pc src/pc/gfx src/pc/audio src/pc/controller src/pc/fs src/pc/fs/packtypes
 ASM_DIRS :=
 
+ifeq ($(TARGET_ANDROID),1)
+  SRC_DIRS += platform/android
+endif
+
 ifeq ($(DISCORDRPC),1)
   SRC_DIRS += src/pc/discord
 endif
 
+include omm.mk
 BIN_DIRS := bin bin/$(VERSION)
 
 ULTRA_SRC_DIRS := lib/src lib/src/math
@@ -458,6 +486,10 @@ SEG_FILES := $(SEGMENT_ELF_FILES) $(ACTOR_ELF_FILES) $(LEVEL_ELF_FILES)
 INCLUDE_CFLAGS := -I include -I $(BUILD_DIR) -I $(BUILD_DIR)/include -I src -I .
 ENDIAN_BITWIDTH := $(BUILD_DIR)/endian-and-bitwidth
 
+ifeq ($(TARGET_ANDROID),1)
+  INCLUDE_CFLAGS += -I platform/android/include
+endif
+
 # Huge deleted N64 section was here
 
 AS := $(CROSS)as
@@ -525,6 +557,8 @@ ifeq ($(WINDOW_API),DXGI)
 else ifeq ($(findstring SDL,$(WINDOW_API)),SDL)
   ifeq ($(WINDOWS_BUILD),1)
     BACKEND_LDFLAGS += -lglew32 -lglu32 -lopengl32
+  else ifeq ($(TARGET_ANDROID),1)
+    BACKEND_LDFLAGS += -lGLESv2 -llog
   else ifeq ($(TARGET_RPI),1)
     BACKEND_LDFLAGS += -lGLESv2
   else ifeq ($(OSX_BUILD),1)
@@ -557,17 +591,21 @@ else ifeq ($(SDL1_USED),1)
 endif
 
 ifneq ($(SDL1_USED)$(SDL2_USED),00)
-  ifeq ($(OSX_BUILD),1)
-    # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
-    OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
-    BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
+  ifeq ($(TARGET_ANDROID),1)
+    BACKEND_LDFLAGS += -lSDL2
   else
-    BACKEND_CFLAGS += $(shell $(SDLCONFIG) --cflags)
-  endif
-  ifeq ($(WINDOWS_BUILD),1)
-    BACKEND_LDFLAGS += $(shell $(SDLCONFIG) --static-libs) -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion
-  else
-    BACKEND_LDFLAGS += $(shell $(SDLCONFIG) --libs)
+    ifeq ($(OSX_BUILD),1)
+      # on OSX at least the homebrew version of sdl-config gives include path as `.../include/SDL2` instead of `.../include`
+      OSX_PREFIX := $(shell $(SDLCONFIG) --prefix)
+      BACKEND_CFLAGS += -I$(OSX_PREFIX)/include $(shell $(SDLCONFIG) --cflags)
+    else
+      BACKEND_CFLAGS += $(shell $(SDLCONFIG) --cflags)
+    endif
+    ifeq ($(WINDOWS_BUILD),1)
+      BACKEND_LDFLAGS += $(shell $(SDLCONFIG) --static-libs) -lsetupapi -luser32 -limm32 -lole32 -loleaut32 -lshell32 -lwinmm -lversion
+    else
+      BACKEND_LDFLAGS += $(shell $(SDLCONFIG) --libs)
+    endif
   endif
 endif
 
@@ -586,6 +624,14 @@ else
 endif
 
 # Check for enhancement options
+
+ifeq ($(WINDOW_API),SDL2)
+  # Check for SDL2 touch controls
+  ifeq ($(TOUCH_CONTROLS),1)
+    CC_CHECK_CFLAGS += -DTOUCH_CONTROLS
+    CFLAGS += -DTOUCH_CONTROLS
+  endif
+endif
 
 # Check for Puppycam option
 ifeq ($(BETTERCAMERA),1)
@@ -666,7 +712,18 @@ else ifeq ($(WINDOWS_BUILD),1)
 
 else ifeq ($(TARGET_RPI),1)
   LDFLAGS := $(OPT_FLAGS) -lm $(BACKEND_LDFLAGS) -no-pie
-
+else ifeq ($(TARGET_ANDROID),1)
+  ifneq ($(shell uname -m | grep "i.86"),)
+    ARCH_APK := x86
+  else ifeq ($(shell uname -m),x86_64)
+    ARCH_APK := x86_64
+  else ifeq ($(shell getconf LONG_BIT),64)
+    ARCH_APK := arm64-v8a
+  else
+    ARCH_APK := armeabi-v7a
+  endif
+  CFLAGS  += -fPIC
+  LDFLAGS := -L ./platform/android/android/lib/$(ARCH_APK)/ -lm $(BACKEND_LDFLAGS) -shared
 else ifeq ($(OSX_BUILD),1)
   LDFLAGS := -lm $(PLATFORM_LDFLAGS) $(BACKEND_LDFLAGS) -lpthread
 
@@ -714,13 +771,20 @@ ZEROTERM = $(PYTHON) $(TOOLS_DIR)/zeroterm.py
 
 ######################## Targets #############################
 
-all: $(EXE)
-
 # thank you apple very cool
 ifeq ($(HOST_OS),Darwin)
   CP := gcp
 else
   CP := cp
+endif
+
+#all: $(ROM)
+ifeq ($(TARGET_ANDROID),1)
+all: $(APK_SIGNED)
+EXE_DEPEND := $(APK_SIGNED)
+else
+all: $(EXE)
+EXE_DEPEND := $(EXE)
 endif
 
 ifeq ($(EXTERNAL_DATA),1)
@@ -735,7 +799,7 @@ all: $(BASEPACK_PATH)
 res: $(BASEPACK_PATH)
 
 # prepares the basepack.lst
-$(BASEPACK_LST): $(EXE)
+$(BASEPACK_LST): $(EXE_DEPEND)
 	@mkdir -p $(BUILD_DIR)/$(BASEDIR)
 	@touch $(BASEPACK_LST)
 	@echo "$(BUILD_DIR)/sound/bank_sets sound/bank_sets" >> $(BASEPACK_LST)
@@ -1024,13 +1088,33 @@ $(BUILD_DIR)/%.o: $(BUILD_DIR)/%.c
 $(BUILD_DIR)/%.o: %.s
 	$(AS) $(ASFLAGS) -MD $(BUILD_DIR)/$*.d -o $@ $<
 
+ifeq ($(TARGET_ANDROID),1)
+APK_FILES := $(shell find platform/android/ -type f)
 
+$(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES)
+	cp -r platform/android $(BUILD_DIR)/platform/ && \
+	mkdir $(BUILD_DIR)/platform/android/android/assets/ && \
+	cp -r res $(BUILD_DIR)/platform/android/android/assets/ && \
+	cp $(PREFIX)/lib/libc++_shared.so $(BUILD_DIR)/platform/android/android/lib/$(ARCH_APK)/ && \
+	cp $(EXE) $(BUILD_DIR)/platform/android/android/lib/$(ARCH_APK)/ && \
+	cd $(BUILD_DIR)/platform/android/android && \
+	zip -0 -r ../../../../../$@ ./* && \
+	cd - && \
+	rm -rf $(BUILD_DIR)/platform/android/android
+
+$(APK_ALIGNED): $(ZIP_UNCOMPRESSED)
+	zipalign -f -p 4 $< $@
+
+$(APK_SIGNED): $(APK_ALIGNED)
+	cp $< $@ && \
+	apksigner sign --cert platform/android/certificate.pem --key platform/android/key.pk8 $@
+endif
 
 $(EXE): $(O_FILES) $(MIO0_FILES:.mio0=.o) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(BUILD_DIR)/$(RPC_LIBS)
-	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) $(LDFLAGS)
+	$(LD) -L $(BUILD_DIR) -o $@ $(O_FILES) $(SOUND_OBJ_FILES) $(ULTRA_O_FILES) $(GODDARD_O_FILES) -lstdc++ $(LDFLAGS)
 
 .PHONY: all clean distclean default diff test load libultra res
-.PRECIOUS: $(BUILD_DIR)/bin/%.elf $(SOUND_BIN_DIR)/%.ctl $(SOUND_BIN_DIR)/%.tbl $(SOUND_SAMPLE_TABLES) $(SOUND_BIN_DIR)/%.s $(BUILD_DIR)/%
+.PRECIOUS: $(BUILD_DIR)/bin/%.elf $(BUILD_DIR)/bin/%.c $(SOUND_BIN_DIR)/%.ctl $(SOUND_BIN_DIR)/%.tbl $(SOUND_SAMPLE_TABLES) $(SOUND_BIN_DIR)/%.s $(BUILD_DIR)/%
 .DELETE_ON_ERROR:
 
 # Remove built-in rules, to improve performance

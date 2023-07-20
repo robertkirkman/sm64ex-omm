@@ -340,7 +340,11 @@ static struct ShaderProgram *gfx_opengl_create_and_load_new_shader(uint32_t shad
 
         append_line(fs_buf, &fs_len, "float random(in vec3 value) {");
         append_line(fs_buf, &fs_len, "    float random = dot(sin(value), vec3(12.9898, 78.233, 37.719));");
+#ifdef USE_GLES
+        append_line(fs_buf, &fs_len, "    return fract(sin(random) * 143.7585453);");
+#else
         append_line(fs_buf, &fs_len, "    return fract(sin(random) * 143758.5453);");
+#endif
         append_line(fs_buf, &fs_len, "}");
     }
 

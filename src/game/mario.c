@@ -393,6 +393,7 @@ void mario_set_forward_vel(struct MarioState *m, f32 forwardVel) {
  * Returns the slipperiness class of Mario's floor.
  */
 s32 mario_get_floor_class(struct MarioState *m) {
+omm_patch__mario_get_floor_class__cheat_walk_on_slope
     s32 floorClass;
 
     // The slide terrain type defaults to slide slipperiness.
@@ -526,6 +527,7 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m) {
 /**
  * Collides with walls and returns the most recent wall.
  */
+#if 0 // mario.c [0]
 struct Surface *resolve_and_return_wall_collisions(Vec3f pos, f32 offset, f32 radius) {
     struct WallCollisionData collisionData;
     struct Surface *wall = NULL;
@@ -561,6 +563,7 @@ f32 vec3f_find_ceil(Vec3f pos, f32 height, struct Surface **ceil) {
 /**
  * Determines if Mario is facing "downhill."
  */
+#endif // mario.c [0]
 s32 mario_facing_downhill(struct MarioState *m, s32 turnYaw) {
     s16 faceAngleYaw = m->faceAngle[1];
 
@@ -579,6 +582,7 @@ s32 mario_facing_downhill(struct MarioState *m, s32 turnYaw) {
  * Determines if a surface is slippery based on the surface class.
  */
 u32 mario_floor_is_slippery(struct MarioState *m) {
+omm_patch__mario_floor_is_slippery__cheat_walk_on_slope
     f32 normY;
 
     if ((m->area->terrainType & TERRAIN_MASK) == TERRAIN_SLIDE

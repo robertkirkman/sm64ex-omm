@@ -317,7 +317,7 @@ void apply_slope_accel(struct MarioState *m) {
 
         if (floorDYaw > -0x4000 && floorDYaw < 0x4000) {
             m->forwardVel += slopeAccel * steepness;
-        } else {
+        } else  omm_patch__apply_slope_accel__not_peach_vibe_gloom {
             m->forwardVel -= slopeAccel * steepness;
         }
     }
@@ -436,6 +436,7 @@ s32 update_decelerating_speed(struct MarioState *m) {
 }
 
 void update_walking_speed(struct MarioState *m) {
+omm_patch__update_walking_speed__update_walking_speed
     f32 maxTargetSpeed;
     f32 targetSpeed;
 

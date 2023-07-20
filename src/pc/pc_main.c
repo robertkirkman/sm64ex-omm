@@ -1,6 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef __ANDROID__
+#include <sys/stat.h>
+#include "platform.h"
+#endif
+
 #ifdef TARGET_WEB
 #include <emscripten.h>
 #include <emscripten/html5.h>
@@ -29,6 +34,7 @@
 #include "configfile.h"
 #include "controller/controller_api.h"
 #include "controller/controller_keyboard.h"
+#include "controller/controller_touchscreen.h"
 #include "fs/fs.h"
 
 #include "game/game_init.h"
@@ -172,7 +178,19 @@ static void on_anim_frame(double time) {
 #endif
 
 void main_func(void) {
+#ifdef __ANDROID__
+    char gamedir[SYS_MAX_PATH] = { 0 };
+    const char *basedir = get_gamedir();
+    snprintf(gamedir, sizeof(gamedir), "%s/%s", 
+             basedir, gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR);
+    if (stat(gamedir, NULL) == -1) {
+        mkdir(gamedir, 0770);
+    }
+    // Extract res
+    SDL_AndroidCopyAssetFilesToDir(basedir);
+#else
     const char *gamedir = gCLIOpts.GameDir[0] ? gCLIOpts.GameDir : FS_BASEDIR;
+#endif
     const char *userpath = gCLIOpts.SavePath[0] ? gCLIOpts.SavePath : sys_user_path();
     fs_init(sys_ropaths, gamedir, userpath);
 
@@ -224,6 +242,10 @@ void main_func(void) {
     gfx_init(wm_api, rendering_api, window_title);
     wm_api->set_keyboard_callbacks(keyboard_on_key_down, keyboard_on_key_up, keyboard_on_all_keys_up);
 
+#ifdef TOUCH_CONTROLS
+    wm_api->set_touchscreen_callbacks((void *)touch_down, (void *)touch_motion, (void *)touch_up);
+#endif
+
     #if defined(AAPI_SDL1) || defined(AAPI_SDL2)
     if (audio_api == NULL && audio_sdl.init()) 
         audio_api = &audio_sdl;
@@ -266,8 +288,77 @@ void main_func(void) {
 #endif
 }
 
+#ifdef __ANDROID__
+int SDL_main(int argc, char *argv[]) {
+#else
 int main(int argc, char *argv[]) {
+#endif
     parse_cli_opts(argc, argv);
+    omm_opt_init();
+    omm_setup_behavior_update_functions_map();
+    gfx_init_patch_display_lists();
+    omm_mario_colors_init();
+    omm_peach_colors_init();
+    omm_behavior_data_init();
+    omm_bowser_mad_aura_init_vertices_and_triangles();
+    bhv_omm_wing_glow_init();
+    bhv_omm_wing_trail_init();
+    omm_data_init();
+    omm_memory_init_pools();
+    omm_speedrun_init();
+    cappy_mad_piano_reset_seq_current_id_init();
+    omm_clear_collision_buffers_init();
+    omm_data_reset_fields_init();
+    omm_obj_init_perry_attacks_init();
+    omm_sparkly_context_init_init();
+    omm_camera_init_from_level_entry_init();
+    omm_player_init_init();
+    omm_render_at_level_entry_init();
+    omm_cappy_update_play_as_init();
+    gfx_texture_preload_opt_update_init();
+    omm_save_file_auto_save_init();
+    omm_level_bowser_4_entry_init();
+    omm_spawn_bowser_init();
+    omm_spawn_grab_init();
+    omm_spawn_perry_charge_init();
+    omm_spawn_perry_trail_init();
+    omm_spawn_perry_init();
+    omm_data_stats_update_init();
+    omm_stars_update_init();
+    omm_sparkly_update_save_data_init();
+    omm_sparkly_update_init();
+    omm_update_crash_handler_init();
+    omm_health_state_update_init();
+    omm_opt_update_num_options_init();
+    omm_opt_update_menu_init();
+    omm_palette_editor_update_init();
+    omm_player_update_init();
+    omm_profiler_update_init();
+    omm_speedrun_update_init();
+    omm_load_dialog_entries_init();
+    dialog_box_update_init();
+    omm_mario_colors_update_init();
+    omm_peach_colors_update_init();
+    omm_shadow_mario_update_init();
+    omm_goomba_stack_update_init();
+    bhv_omm_stats_board_render_init();
+    omm_obj_update_perry_attacks_init();
+    omm_peach_vibe_update_music_init();
+    omm_act_peach_perry_charge_update_init();
+    omm_opt_update_shortcuts_init();
+    omm_player_update_gfx_init();
+    omm_render_pause_update_init();
+    omm_update_dialogs_init();
+    geo_register_object_effects__omm_cappy_process_graph_node();
+    geo_register_object_effects__geo_process_object_transparency();
+    geo_register_object_effects__omm_sparkly_bowser_4_process_graph_node();
+    omm_level_bowser_4__create_branch();
+    omm_level_fish__create_branch();
+    omm_level_peachy_room__create_branch();
+    omm_level_ttm_area_2__create_branch();
+    omm_surface_register_collision_jump_1();
+    omm_surface_register_collision_jump_2();
+    omm_surface_register_collision_jump_3();
     main_func();
     return 0;
 }

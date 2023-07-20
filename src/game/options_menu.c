@@ -12,6 +12,9 @@
 #ifdef BETTERCAMERA
 #include "game/bettercamera.h"
 #endif
+#ifdef TOUCH_CONTROLS
+#include "pc/controller/controller_touchscreen.h"
+#endif
 #include "game/mario_misc.h"
 #include "game/game_init.h"
 #include "game/ingame_menu.h"
@@ -55,6 +58,7 @@ static const u8 optSmallStr[][32] = {
 static const u8 menuStr[][32] = {
     { TEXT_OPT_OPTIONS },
     { TEXT_OPT_CAMERA },
+    "TOUCH CONTROLS",
     { TEXT_OPT_CONTROLS },
     { TEXT_OPT_VIDEO },
     { TEXT_OPT_AUDIO },
@@ -106,6 +110,13 @@ static const u8 optsCheatsStr[][64] = {
     { TEXT_OPT_CHEAT8 },
     { TEXT_OPT_CHEAT9 },
 };
+
+#ifdef TOUCH_CONTROLS
+static const u8 optsTouchControlsStr[][32] = {
+    "Touch Binds",
+    "Slide Touch"
+};
+#endif
 
 static const u8 bindStr[][32] = {
     { TEXT_OPT_UNBOUND },
@@ -218,6 +229,10 @@ static void optvideo_apply(UNUSED struct Option *self, s32 arg) {
     if (!arg) configWindow.settings_changed = true;
 }
 
+static void opttouchcontrols_enter_touch_control_config(UNUSED struct Option *self, s32 arg) {
+    if (!arg) gInTouchConfig = true;
+}
+
 /* submenu option lists */
 
 #ifdef BETTERCAMERA
@@ -232,6 +247,13 @@ static struct Option optsCamera[] = {
     DEF_OPT_SCROLL( optsCameraStr[4], &configCameraAggr, 0, 100, 1 ),
     DEF_OPT_SCROLL( optsCameraStr[5], &configCameraPan, 0, 100, 1 ),
     DEF_OPT_SCROLL( optsCameraStr[8], &configCameraDegrade, 0, 100, 1 ),
+};
+#endif
+
+#ifdef TOUCH_CONTROLS
+static struct Option optsTouchControls[] = {
+    DEF_OPT_BUTTON( optsTouchControlsStr[0], opttouchcontrols_enter_touch_control_config ),
+    DEF_OPT_TOGGLE( optsTouchControlsStr[1], &configSlideTouch )
 };
 #endif
 
@@ -290,10 +312,13 @@ static struct Option optsCheats[] = {
 #ifdef BETTERCAMERA
 static struct SubMenu menuCamera   = DEF_SUBMENU( menuStr[1], optsCamera );
 #endif
-static struct SubMenu menuControls = DEF_SUBMENU( menuStr[2], optsControls );
-static struct SubMenu menuVideo    = DEF_SUBMENU( menuStr[3], optsVideo );
-static struct SubMenu menuAudio    = DEF_SUBMENU( menuStr[4], optsAudio );
-static struct SubMenu menuCheats   = DEF_SUBMENU( menuStr[6], optsCheats );
+#ifdef TOUCH_CONTROLS
+static struct SubMenu menuTouchControls = DEF_SUBMENU( menuStr[2], optsTouchControls );
+#endif
+static struct SubMenu menuControls = DEF_SUBMENU( menuStr[3], optsControls );
+static struct SubMenu menuVideo    = DEF_SUBMENU( menuStr[4], optsVideo );
+static struct SubMenu menuAudio    = DEF_SUBMENU( menuStr[5], optsAudio );
+static struct SubMenu menuCheats   = DEF_SUBMENU( menuStr[7], optsCheats );
 
 /* main options menu definition */
 
@@ -301,12 +326,15 @@ static struct Option optsMain[] = {
 #ifdef BETTERCAMERA
     DEF_OPT_SUBMENU( menuStr[1], &menuCamera ),
 #endif
-    DEF_OPT_SUBMENU( menuStr[2], &menuControls ),
-    DEF_OPT_SUBMENU( menuStr[3], &menuVideo ),
-    DEF_OPT_SUBMENU( menuStr[4], &menuAudio ),
-    DEF_OPT_BUTTON ( menuStr[5], optmenu_act_exit ),
+#ifdef TOUCH_CONTROLS
+    DEF_OPT_SUBMENU( menuStr[2], &menuTouchControls ),
+#endif
+    DEF_OPT_SUBMENU( menuStr[3], &menuControls ),
+    DEF_OPT_SUBMENU( menuStr[4], &menuVideo ),
+    DEF_OPT_SUBMENU( menuStr[5], &menuAudio ),
+    DEF_OPT_BUTTON ( menuStr[6], optmenu_act_exit ),
     // NOTE: always keep cheats the last option here because of the half-assed way I toggle them
-    DEF_OPT_SUBMENU( menuStr[6], &menuCheats )
+    DEF_OPT_SUBMENU( menuStr[7], &menuCheats )
 };
 
 static struct SubMenu menuMain = DEF_SUBMENU( menuStr[0], optsMain );
@@ -317,6 +345,7 @@ static s32 optmenu_option_timer = 0;
 static u8 optmenu_hold_count = 0;
 
 static struct SubMenu *currentMenu = &menuMain;
+#include "data/omm/system/omm_options_menu.inl"
 
 static inline s32 wrap_add(s32 a, const s32 b, const s32 min, const s32 max) {
     a += b;
