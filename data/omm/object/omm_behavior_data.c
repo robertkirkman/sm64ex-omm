@@ -80,9 +80,9 @@ static f32 smod_none(f32 scale) { return scale; }
 static f32 smod_goomba(f32 scale) { return 1.5f * sqrtf(scale / 1.5f); }
 
 #pragma GCC diagnostic push
+#pragma clang diagnostic push
 #pragma GCC diagnostic ignored "-Wint-conversion"
-
-#pragma GCC diagnostic pop
+#pragma clang diagnostic ignored "-Wint-conversion"
 
 //
 // Processed data
@@ -1729,6 +1729,9 @@ void omm_behavior_data_init() {
         }
     }
 }
+
+#pragma GCC diagnostic pop
+#pragma clang diagnostic pop
 
 //
 // Public

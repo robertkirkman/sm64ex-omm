@@ -288,6 +288,72 @@ void main_func(void) {
 #endif
 }
 
+extern void omm_opt_init();
+extern void omm_setup_behavior_update_functions_map();
+extern void gfx_init_patch_display_lists();
+//extern void omm_mario_colors_init();
+extern void omm_peach_colors_init();
+extern void omm_behavior_data_init();
+extern void omm_bowser_mad_aura_init_vertices_and_triangles();
+extern void bhv_omm_wing_glow_init();
+extern void bhv_omm_wing_trail_init();
+extern void omm_data_init();
+extern void omm_memory_init_pools();
+extern void omm_speedrun_init();
+extern void cappy_mad_piano_reset_seq_current_id_init();
+extern void omm_clear_collision_buffers_init();
+extern void omm_data_reset_fields_init();
+extern void omm_obj_init_perry_attacks_init();
+extern void omm_sparkly_context_init_init();
+extern void omm_camera_init_from_level_entry_init();
+extern void omm_player_init_init();
+extern void omm_render_at_level_entry_init();
+extern void omm_cappy_update_play_as_init();
+extern void gfx_texture_preload_opt_update_init();
+extern void omm_save_file_auto_save_init();
+extern void omm_level_bowser_4_entry_init();
+extern void omm_spawn_bowser_init();
+extern void omm_spawn_grab_init();
+extern void omm_spawn_perry_charge_init();
+extern void omm_spawn_perry_trail_init();
+extern void omm_spawn_perry_init();
+extern void omm_data_stats_update_init();
+extern void omm_stars_update_init();
+extern void omm_sparkly_update_save_data_init();
+extern void omm_sparkly_update_init();
+extern void omm_update_crash_handler_init();
+extern void omm_health_state_update_init();
+extern void omm_opt_update_num_options_init();
+extern void omm_opt_update_menu_init();
+extern void omm_palette_editor_update_init();
+extern void omm_player_update_init();
+extern void omm_profiler_update_init();
+extern void omm_speedrun_update_init();
+extern void omm_load_dialog_entries_init();
+extern void dialog_box_update_init();
+//extern void omm_mario_colors_update_init();
+extern void omm_peach_colors_update_init();
+extern void omm_shadow_mario_update_init();
+extern void omm_goomba_stack_update_init();
+extern void bhv_omm_stats_board_render_init();
+extern void omm_obj_update_perry_attacks_init();
+extern void omm_peach_vibe_update_music_init();
+extern void omm_act_peach_perry_charge_update_init();
+extern void omm_opt_update_shortcuts_init();
+extern void omm_player_update_gfx_init();
+extern void omm_render_pause_update_init();
+extern void omm_update_dialogs_init();
+extern void geo_register_object_effects__omm_cappy_process_graph_node();
+extern void geo_register_object_effects__geo_process_object_transparency();
+extern void geo_register_object_effects__omm_sparkly_bowser_4_process_graph_node();
+extern void omm_level_bowser_4__create_branch();
+extern void omm_level_fish__create_branch();
+extern void omm_level_peachy_room__create_branch();
+extern void omm_level_ttm_area_2__create_branch();
+extern void omm_surface_register_collision_jump_1();
+extern void omm_surface_register_collision_jump_2();
+extern void omm_surface_register_collision_jump_3();
+
 #ifdef __ANDROID__
 int SDL_main(int argc, char *argv[]) {
 #else
@@ -297,7 +363,7 @@ int main(int argc, char *argv[]) {
     omm_opt_init();
     omm_setup_behavior_update_functions_map();
     gfx_init_patch_display_lists();
-    omm_mario_colors_init();
+    //omm_mario_colors_init();
     omm_peach_colors_init();
     omm_behavior_data_init();
     omm_bowser_mad_aura_init_vertices_and_triangles();
@@ -337,7 +403,7 @@ int main(int argc, char *argv[]) {
     omm_speedrun_update_init();
     omm_load_dialog_entries_init();
     dialog_box_update_init();
-    omm_mario_colors_update_init();
+    //omm_mario_colors_update_init();
     omm_peach_colors_update_init();
     omm_shadow_mario_update_init();
     omm_goomba_stack_update_init();

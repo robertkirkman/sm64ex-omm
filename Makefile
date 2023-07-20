@@ -112,6 +112,14 @@ endif
 
 # MXE overrides
 
+ifeq ($(TARGET_ANDROID),1)
+  RENDER_API := GL
+  WINDOW_API := SDL2
+  AUDIO_API := SDL2
+  CONTROLLER_API := SDL2
+  TOUCH_CONTROLS := 1
+endif
+
 ifeq ($(WINDOWS_BUILD),1)
   ifeq ($(CROSS),i686-w64-mingw32.static-)
     TARGET_ARCH = i386pe
@@ -1093,8 +1101,9 @@ APK_FILES := $(shell find platform/android/ -type f)
 
 $(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES)
 	cp -r platform/android $(BUILD_DIR)/platform/ && \
+  rm -rf $(BUILD_DIR)/platform/android/android/assets/ && \
 	mkdir $(BUILD_DIR)/platform/android/android/assets/ && \
-	cp -r res $(BUILD_DIR)/platform/android/android/assets/ && \
+	cp -r $(BUILD_DIR)/res $(BUILD_DIR)/platform/android/android/assets/ && \
 	cp $(PREFIX)/lib/libc++_shared.so $(BUILD_DIR)/platform/android/android/lib/$(ARCH_APK)/ && \
 	cp $(EXE) $(BUILD_DIR)/platform/android/android/lib/$(ARCH_APK)/ && \
 	cd $(BUILD_DIR)/platform/android/android && \
