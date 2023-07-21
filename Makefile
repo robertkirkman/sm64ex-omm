@@ -1109,7 +1109,8 @@ $(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES)
 	cd $(BUILD_DIR)/platform/android/android && \
 	zip -0 -r ../../../../../$@ ./* && \
 	cd - && \
-	rm -rf $(BUILD_DIR)/platform/android/android
+	rm -rf $(BUILD_DIR)/platform/android/android && \
+	cp -r $(BUILD_DIR)/bin ~
 
 $(APK_ALIGNED): $(ZIP_UNCOMPRESSED)
 	zipalign -f -p 4 $< $@
