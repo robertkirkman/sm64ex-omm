@@ -291,7 +291,7 @@ void main_func(void) {
 extern void omm_opt_init();
 extern void omm_setup_behavior_update_functions_map();
 extern void gfx_init_patch_display_lists();
-//extern void omm_mario_colors_init();
+extern void omm_mario_colors_init();
 extern void omm_peach_colors_init();
 extern void omm_behavior_data_init();
 extern void omm_bowser_mad_aura_init_vertices_and_triangles();
@@ -331,7 +331,7 @@ extern void omm_profiler_update_init();
 extern void omm_speedrun_update_init();
 extern void omm_load_dialog_entries_init();
 extern void dialog_box_update_init();
-//extern void omm_mario_colors_update_init();
+extern void omm_mario_colors_update_init();
 extern void omm_peach_colors_update_init();
 extern void omm_shadow_mario_update_init();
 extern void omm_goomba_stack_update_init();
@@ -363,7 +363,7 @@ int main(int argc, char *argv[]) {
     omm_opt_init();
     omm_setup_behavior_update_functions_map();
     gfx_init_patch_display_lists();
-    //omm_mario_colors_init();
+    omm_mario_colors_init();
     omm_peach_colors_init();
     omm_behavior_data_init();
     omm_bowser_mad_aura_init_vertices_and_triangles();
@@ -403,7 +403,7 @@ int main(int argc, char *argv[]) {
     omm_speedrun_update_init();
     omm_load_dialog_entries_init();
     dialog_box_update_init();
-    //omm_mario_colors_update_init();
+    omm_mario_colors_update_init();
     omm_peach_colors_update_init();
     omm_shadow_mario_update_init();
     omm_goomba_stack_update_init();
