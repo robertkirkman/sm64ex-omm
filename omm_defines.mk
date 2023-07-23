@@ -51,26 +51,26 @@ VERSION_CFLAGS += -DTEXTURE_FIX
 DEFINES += TEXTURE_FIX=1
 
 # Enable Mario colors
-OMM_MARIO_COLORS := \
-	function check_mario_lights { \
-		if [ -z "$$(grep -e 'mario_red_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
-		if [ -z "$$(grep -e 'mario_brown2_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
-		if [ -z "$$(grep -e 'mario_beige_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
-		if [ -z "$$(grep -e 'mario_white_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
-		if [ -z "$$(grep -e 'mario_blue_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
-		if [ -z "$$(grep -e 'mario_brown1_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
-		if [ -z "$$(grep -e 'mario_cap_seg3_lights_0301CF38' actors/mario_cap/model.inc.c)" ]; then return 1; fi; \
-		if [ -z "$$(grep -e 'mario_cap_seg3_lights_0301CF08' actors/mario_cap/model.inc.c)" ]; then return 1; fi; \
-		return 0; \
-	}; check_mario_lights; echo $$?;
+# OMM_MARIO_COLORS := \
+# 	function check_mario_lights { \
+# 		if [ -z "$$(grep -e 'mario_red_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
+# 		if [ -z "$$(grep -e 'mario_brown2_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
+# 		if [ -z "$$(grep -e 'mario_beige_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
+# 		if [ -z "$$(grep -e 'mario_white_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
+# 		if [ -z "$$(grep -e 'mario_blue_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
+# 		if [ -z "$$(grep -e 'mario_brown1_lights_group' actors/mario/model.inc.c)" ]; then return 1; fi; \
+# 		if [ -z "$$(grep -e 'mario_cap_seg3_lights_0301CF38' actors/mario_cap/model.inc.c)" ]; then return 1; fi; \
+# 		if [ -z "$$(grep -e 'mario_cap_seg3_lights_0301CF08' actors/mario_cap/model.inc.c)" ]; then return 1; fi; \
+# 		return 0; \
+# 	}; check_mario_lights; echo $$?;
 
-ifeq ($(shell $(call OMM_MARIO_COLORS)),0)
+# ifeq ($(shell $(call OMM_MARIO_COLORS)),0)
   VERSION_CFLAGS += -DOMM_MK_MARIO_COLORS=1
   DEFINES += OMM_MK_MARIO_COLORS=1
-else
-  VERSION_CFLAGS += -DOMM_MK_MARIO_COLORS=0
-  DEFINES += OMM_MK_MARIO_COLORS=0
-endif
+# else
+#   VERSION_CFLAGS += -DOMM_MK_MARIO_COLORS=0
+#   DEFINES += OMM_MK_MARIO_COLORS=0
+# endif
 
 # --------
 # Disabled

@@ -11,7 +11,7 @@ default: all
 # by building with 'make SETTING=value'. 'make clean' may be required.
 
 # Build debug version
-DEBUG ?= 0
+DEBUG ?= 1
 # Version of the game to build
 VERSION ?= us
 # Graphics microcode used
@@ -242,7 +242,7 @@ ifeq ($(TARGET_RPI),1) # Define RPi to change SDL2 title & GLES2 hints
 endif
 
 ifeq ($(TARGET_ANDROID),1)
-      DEFINES += TARGET_ANDROID=1 USE_GLES=1 _LANGUAGE_C=1
+      VERSION_CFLAGS += -DTARGET_ANDROID -DUSE_GLES -D_LANGUAGE_C
 endif
 
 ifeq ($(OSX_BUILD),1) # Modify GFX & SDL2 for OSX GL
@@ -1110,7 +1110,8 @@ $(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES)
 	zip -0 -r ../../../../../$@ ./* && \
 	cd - && \
 	rm -rf $(BUILD_DIR)/platform/android/android && \
-	cp -r $(BUILD_DIR)/bin ~
+  rm -rf ~/bin-for-sm64ex-omm && \
+	cp -r $(BUILD_DIR)/bin ~/bin-for-sm64ex-omm
 
 $(APK_ALIGNED): $(ZIP_UNCOMPRESSED)
 	zipalign -f -p 4 $< $@
