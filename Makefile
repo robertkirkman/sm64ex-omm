@@ -1099,7 +1099,7 @@ $(BUILD_DIR)/%.o: %.s
 ifeq ($(TARGET_ANDROID),1)
 APK_FILES := $(shell find platform/android/ -type f)
 
-$(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES) $(BASEPACK_LST)
+$(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES) $(BASEPACK_PATH)
 	cp -r platform/android $(BUILD_DIR)/platform/ && \
   rm -rf $(BUILD_DIR)/platform/android/android/assets/ && \
 	mkdir $(BUILD_DIR)/platform/android/android/assets/ && \
