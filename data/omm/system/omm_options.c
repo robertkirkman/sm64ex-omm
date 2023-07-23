@@ -790,7 +790,8 @@ void omm_opt_init() {
         struct Option optTouchControls = omm_opt_make_submenu(OMM_TEXT_OPT_TOUCH_CONTROLS_TITLE, OMM_TEXT_OPT_TOUCH_CONTROLS_TITLE, options(
                 omm_opt_make_button(OMM_TEXT_OPT_TOUCH_CONTROLS_TOUCH_BINDS, (void (*)(struct Option *, s32)) omm_opt_enter_touch_control_config),
                 omm_opt_make_toggle(OMM_TEXT_OPT_TOUCH_CONTROLS_SLIDE_TOUCH, &configSlideTouch),
-            ), 2);
+                omm_opt_make_toggle(OMM_TEXT_OPT_TOUCH_CONTROLS_RENDER_CAPPY, &configRenderCappy),
+            ), 3);
         gOmmOptTouchControls.label = mem_dup(optTouchControls.label, omm_opt_text_length(optTouchControls.label) + 1);
         gOmmOptTouchControls.subMenu = mem_dup(optTouchControls.nextMenu, sizeof(struct SubMenu));
 #endif

@@ -221,6 +221,7 @@ static const struct ConfigOption options[] = {
     {.name = "touch_autohide",           .type = CONFIG_TYPE_BOOL, .boolValue = &configAutohideTouch},
     {.name = "touch_slide",              .type = CONFIG_TYPE_BOOL, .boolValue = &configSlideTouch},
     {.name = "touch_snap",               .type = CONFIG_TYPE_BOOL, .boolValue = &configElementSnap},
+    {.name = "render_cappy",             .type = CONFIG_TYPE_BOOL, .boolValue = &configRenderCappy},
 #endif
 };
 

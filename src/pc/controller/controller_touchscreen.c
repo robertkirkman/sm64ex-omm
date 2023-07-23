@@ -32,7 +32,8 @@ bool gInTouchConfig = false,
      gGamepadActive = false,
      configAutohideTouch = false,
      configSlideTouch = true, 
-     configElementSnap = false;
+     configElementSnap = false,
+     configRenderCappy = true;
 
 // these are the default screen positions and sizes of the touch controls 
 // in the order of ConfigControlElementIndex

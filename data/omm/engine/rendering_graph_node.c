@@ -2,6 +2,10 @@
 #include "data/omm/omm_includes.h"
 #undef OMM_ALL_HEADERS
 
+#ifdef TOUCH_CONTROLS
+#include "pc/controller/controller_touchscreen.h"
+#endif
+
 /**
  * This file contains the code that processes the scene graph for rendering.
  * The scene graph is responsible for drawing everything except the HUD / text boxes.
@@ -843,7 +847,13 @@ PREPROCESS {
     }
     geo_process_node_and_siblings(selectedChild);
 NOT_PREPROCESS {
-    omm_cappy_gfx_draw_eyes(&node->fnNode.node, (void (*)(void *, s16)) geo_append_display_list);
+#ifdef TOUCH_CONTROLS
+    if (configRenderCappy) {
+#endif
+        omm_cappy_gfx_draw_eyes(&node->fnNode.node, (void (*)(void *, s16)) geo_append_display_list);
+#ifdef TOUCH_CONTROLS
+    }
+#endif
 }
 }
 

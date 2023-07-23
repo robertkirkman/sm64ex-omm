@@ -303,9 +303,10 @@ OMM_TEXT_(OPT_TEXTURE_CACHING_DISABLED,                 "Disabled")
 OMM_TEXT_(OPT_TEXTURE_CACHING_AT_START_UP,              "At Start-up")
 OMM_TEXT_(OPT_TEXTURE_CACHING_PERMANENT,                "Permanent")
 #ifdef TOUCH_CONTROLS
-OMM_TEXT_(OPT_TOUCH_CONTROLS_TITLE,                     "TOUCH CONTROLS")
+OMM_TEXT_(OPT_TOUCH_CONTROLS_TITLE,                     "ANDROID SETTINGS")
 OMM_TEXT_(OPT_TOUCH_CONTROLS_TOUCH_BINDS,               "Touch Binds")
 OMM_TEXT_(OPT_TOUCH_CONTROLS_SLIDE_TOUCH,               "Slide Touch")
+OMM_TEXT_(OPT_TOUCH_CONTROLS_RENDER_CAPPY,              "Render Cappy")
 #endif
 OMM_TEXT_(OPT_CONTROLS_TITLE,                           "CONTROLS")
 OMM_TEXT_(OPT_CONTROLS_LABEL,                           "Controls")

@@ -58,7 +58,7 @@ static const u8 optSmallStr[][32] = {
 static const u8 menuStr[][32] = {
     { TEXT_OPT_OPTIONS },
     { TEXT_OPT_CAMERA },
-    "TOUCH CONTROLS",
+    "ANDROID SETTINGS",
     { TEXT_OPT_CONTROLS },
     { TEXT_OPT_VIDEO },
     { TEXT_OPT_AUDIO },
@@ -115,6 +115,7 @@ static const u8 optsCheatsStr[][64] = {
 static const u8 optsTouchControlsStr[][32] = {
     "Touch Binds",
     "Slide Touch"
+    "Render Cappy"
 };
 #endif
 
@@ -253,7 +254,8 @@ static struct Option optsCamera[] = {
 #ifdef TOUCH_CONTROLS
 static struct Option optsTouchControls[] = {
     DEF_OPT_BUTTON( optsTouchControlsStr[0], opttouchcontrols_enter_touch_control_config ),
-    DEF_OPT_TOGGLE( optsTouchControlsStr[1], &configSlideTouch )
+    DEF_OPT_TOGGLE( optsTouchControlsStr[1], &configSlideTouch ),
+    DEF_OPT_TOGGLE( optsTouchControlsStr[2], &configRenderCappy )
 };
 #endif
 
