@@ -807,7 +807,7 @@ all: $(BASEPACK_PATH)
 res: $(BASEPACK_PATH)
 
 # prepares the basepack.lst
-$(BASEPACK_LST): $(EXE_DEPEND)
+$(BASEPACK_LST): $(EXE)
 	@mkdir -p $(BUILD_DIR)/$(BASEDIR)
 	@touch $(BASEPACK_LST)
 	@echo "$(BUILD_DIR)/sound/bank_sets sound/bank_sets" >> $(BASEPACK_LST)
@@ -1099,7 +1099,7 @@ $(BUILD_DIR)/%.o: %.s
 ifeq ($(TARGET_ANDROID),1)
 APK_FILES := $(shell find platform/android/ -type f)
 
-$(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES)
+$(ZIP_UNCOMPRESSED): $(EXE) $(APK_FILES) $(BASEPACK_LST)
 	cp -r platform/android $(BUILD_DIR)/platform/ && \
   rm -rf $(BUILD_DIR)/platform/android/android/assets/ && \
 	mkdir $(BUILD_DIR)/platform/android/android/assets/ && \
