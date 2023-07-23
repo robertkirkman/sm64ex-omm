@@ -843,7 +843,7 @@ PREPROCESS {
     }
     geo_process_node_and_siblings(selectedChild);
 NOT_PREPROCESS {
-    //omm_cappy_gfx_draw_eyes(&node->fnNode.node, (void (*)(void *, s16)) geo_append_display_list);
+    omm_cappy_gfx_draw_eyes(&node->fnNode.node, (void (*)(void *, s16)) geo_append_display_list);
 }
 }
 

@@ -346,30 +346,30 @@ static void omm_render_hud_power_meter_segments(f32 x0, f32 y0, f32 alpha, f32 t
 }
 
 static void omm_render_hud_power_meter_heart(f32 x, f32 y, f32 alpha, f32 ticks) {
-//    for (s32 i = 0; i != OMM_RENDER_POWER_HEART_NUM_PIECES; ++i) {
-//        f32 t0 = (i + 0 - 32) / (OMM_RENDER_POWER_HEART_NUM_PIECES / 2.f);
-//        f32 t1 = (i + 1 - 32) / (OMM_RENDER_POWER_HEART_NUM_PIECES / 2.f);
-//        s32 index = OMM_RENDER_POWER_HEART_PULSE;
-//
-//        // Heart shape <3
-//        f32 a0 = t0 * 65536.f / (2.f * M_PI);
-//        f32 a1 = t1 * 65536.f / (2.f * M_PI);
-//        f32 r0 = (1.f - abs_f(t0)) * (1.f + 3.f * abs_f(t0));
-//        f32 r1 = (1.f - abs_f(t1)) * (1.f + 3.f * abs_f(t1));
-//        f32 dx0 = r0 * sins(a0);
-//        f32 dy0 = r0 * coss(a0) - 0.65f;
-//        f32 dx1 = r1 * sins(a1);
-//        f32 dy1 = r1 * coss(a1) - 0.65f;
-//        sOmmPowerMeterVtxHead[0] = (Vtx) { { { x,                                           y,                                           0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_CENTER_R, OMM_RENDER_POWER_HEART_CENTER_G, OMM_RENDER_POWER_HEART_CENTER_B, (u8) clamp_f(alpha, 0, 255) } } };
-//        sOmmPowerMeterVtxHead[1] = (Vtx) { { { x + dx0 * OMM_RENDER_POWER_HEART_RADIUS_1_X, y + dy0 * OMM_RENDER_POWER_HEART_RADIUS_1_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_CENTER_R, OMM_RENDER_POWER_HEART_CENTER_G, OMM_RENDER_POWER_HEART_CENTER_B, (u8) clamp_f(alpha, 0, 255) } } };
-//        sOmmPowerMeterVtxHead[2] = (Vtx) { { { x + dx0 * OMM_RENDER_POWER_HEART_RADIUS_2_X, y + dy0 * OMM_RENDER_POWER_HEART_RADIUS_2_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_BORDER_R, OMM_RENDER_POWER_HEART_BORDER_G, OMM_RENDER_POWER_HEART_BORDER_B, (u8) clamp_f(alpha, 0, 255) } } };
-//        sOmmPowerMeterVtxHead[3] = (Vtx) { { { x + dx1 * OMM_RENDER_POWER_HEART_RADIUS_1_X, y + dy1 * OMM_RENDER_POWER_HEART_RADIUS_1_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_CENTER_R, OMM_RENDER_POWER_HEART_CENTER_G, OMM_RENDER_POWER_HEART_CENTER_B, (u8) clamp_f(alpha, 0, 255) } } };
-//        sOmmPowerMeterVtxHead[4] = (Vtx) { { { x + dx1 * OMM_RENDER_POWER_HEART_RADIUS_2_X, y + dy1 * OMM_RENDER_POWER_HEART_RADIUS_2_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_BORDER_R, OMM_RENDER_POWER_HEART_BORDER_G, OMM_RENDER_POWER_HEART_BORDER_B, (u8) clamp_f(alpha, 0, 255) } } };
-//        gSPVertex(sOmmPowerMeterGfxHead++, sOmmPowerMeterVtxHead, 5, 0);
-//        gSP2Triangles(sOmmPowerMeterGfxHead++, 2, 1, 4, 0x0, 1, 3, 4, 0x0);
-//        gSP1Triangle(sOmmPowerMeterGfxHead++, 1, 0, 3, 0x0);
-//        sOmmPowerMeterVtxHead += 5;
-//    }
+   for (s32 i = 0; i != OMM_RENDER_POWER_HEART_NUM_PIECES; ++i) {
+       f32 t0 = (i + 0 - 32) / (OMM_RENDER_POWER_HEART_NUM_PIECES / 2.f);
+       f32 t1 = (i + 1 - 32) / (OMM_RENDER_POWER_HEART_NUM_PIECES / 2.f);
+       s32 index = OMM_RENDER_POWER_HEART_PULSE;
+
+       // Heart shape <3
+       f32 a0 = t0 * 65536.f / (2.f * M_PI);
+       f32 a1 = t1 * 65536.f / (2.f * M_PI);
+       f32 r0 = (1.f - abs_f(t0)) * (1.f + 3.f * abs_f(t0));
+       f32 r1 = (1.f - abs_f(t1)) * (1.f + 3.f * abs_f(t1));
+       f32 dx0 = r0 * sins(a0);
+       f32 dy0 = r0 * coss(a0) - 0.65f;
+       f32 dx1 = r1 * sins(a1);
+       f32 dy1 = r1 * coss(a1) - 0.65f;
+       sOmmPowerMeterVtxHead[0] = (Vtx) { { { x,                                           y,                                           0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_CENTER_R, OMM_RENDER_POWER_HEART_CENTER_G, OMM_RENDER_POWER_HEART_CENTER_B, (u8) clamp_f(alpha, 0, 255) } } };
+       sOmmPowerMeterVtxHead[1] = (Vtx) { { { x + dx0 * OMM_RENDER_POWER_HEART_RADIUS_1_X, y + dy0 * OMM_RENDER_POWER_HEART_RADIUS_1_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_CENTER_R, OMM_RENDER_POWER_HEART_CENTER_G, OMM_RENDER_POWER_HEART_CENTER_B, (u8) clamp_f(alpha, 0, 255) } } };
+       sOmmPowerMeterVtxHead[2] = (Vtx) { { { x + dx0 * OMM_RENDER_POWER_HEART_RADIUS_2_X, y + dy0 * OMM_RENDER_POWER_HEART_RADIUS_2_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_BORDER_R, OMM_RENDER_POWER_HEART_BORDER_G, OMM_RENDER_POWER_HEART_BORDER_B, (u8) clamp_f(alpha, 0, 255) } } };
+       sOmmPowerMeterVtxHead[3] = (Vtx) { { { x + dx1 * OMM_RENDER_POWER_HEART_RADIUS_1_X, y + dy1 * OMM_RENDER_POWER_HEART_RADIUS_1_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_CENTER_R, OMM_RENDER_POWER_HEART_CENTER_G, OMM_RENDER_POWER_HEART_CENTER_B, (u8) clamp_f(alpha, 0, 255) } } };
+       sOmmPowerMeterVtxHead[4] = (Vtx) { { { x + dx1 * OMM_RENDER_POWER_HEART_RADIUS_2_X, y + dy1 * OMM_RENDER_POWER_HEART_RADIUS_2_Y, 0 }, 0, { 0, 0 }, { OMM_RENDER_POWER_HEART_BORDER_R, OMM_RENDER_POWER_HEART_BORDER_G, OMM_RENDER_POWER_HEART_BORDER_B, (u8) clamp_f(alpha, 0, 255) } } };
+       gSPVertex(sOmmPowerMeterGfxHead++, sOmmPowerMeterVtxHead, 5, 0);
+       gSP2Triangles(sOmmPowerMeterGfxHead++, 2, 1, 4, 0x0, 1, 3, 4, 0x0);
+       gSP1Triangle(sOmmPowerMeterGfxHead++, 1, 0, 3, 0x0);
+       sOmmPowerMeterVtxHead += 5;
+   }
 }
 
 static void omm_render_hud_power_meter_number(f32 x, f32 y, f32 alpha, f32 segments) {
@@ -1052,32 +1052,32 @@ void omm_render_hud_values(struct MarioState *m) {
 //
 
 static Gfx *omm_render_hud_red_coins_radar_arrow(Gfx *pos, f32 angle) {
-//    static Vtx sRadarArrowVtx[4] = {
-//        { { { 0, 0, 0 }, 0, { 0x0000, 0x1000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
-//        { { { 0, 0, 0 }, 0, { 0x1000, 0x1000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
-//        { { { 0, 0, 0 }, 0, { 0x1000, 0x0000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
-//        { { { 0, 0, 0 }, 0, { 0x0000, 0x0000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } }
-//    };
-//
-//    // Vertices
-//    for (s32 i = 0; i != 4; ++i) {
-//        s16 a = angle + ((i * 0x4000) - 0x6000);
-//        sRadarArrowVtx[i].v.ob[0] = OMM_RENDER_RADAR_X + OMM_RENDER_RADAR_RADIUS * coss(angle + 0x4000) + OMM_RENDER_RADAR_ARROW_SIZE * OMM_INVSQRT2 * coss(a);
-//        sRadarArrowVtx[i].v.ob[1] = OMM_RENDER_RADAR_Y + OMM_RENDER_RADAR_RADIUS * sins(angle + 0x4000) + OMM_RENDER_RADAR_ARROW_SIZE * OMM_INVSQRT2 * sins(a);
-//    }
-//
-//    // Display list
-//    gDPSetRenderMode(pos++, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2);
-//    gDPSetCombineLERP(pos++, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0);
-//    gDPSetEnvColor(pos++, 0xFF, 0xFF, 0xFF, 0xFF);
-//    gSPTexture(pos++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
-//    gDPLoadTextureBlock(pos++, OMM_TEXTURE_HUD_ARROW, G_IM_FMT_RGBA, G_IM_SIZ_32b, 128, 128, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
-//    gSPVertex(pos++, sRadarArrowVtx, 4, 0);
-//    gSP2Triangles(pos++, 0, 1, 2, 0, 0, 2, 3, 0);
-//    gDPSetRenderMode(pos++, G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2);
-//    gDPSetCombineLERP(pos++, 0, 0, 0, SHADE, 0, 0, 0, SHADE, 0, 0, 0, SHADE, 0, 0, 0, SHADE);
-//    gDPSetEnvColor(pos++, 0xFF, 0xFF, 0xFF, 0xFF);
-//    gSPTexture(pos++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
+    static Vtx sRadarArrowVtx[4] = {
+        { { { 0, 0, 0 }, 0, { 0x0000, 0x1000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+        { { { 0, 0, 0 }, 0, { 0x1000, 0x1000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+        { { { 0, 0, 0 }, 0, { 0x1000, 0x0000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } },
+        { { { 0, 0, 0 }, 0, { 0x0000, 0x0000 }, { 0xFF, 0xFF, 0xFF, 0xFF } } }
+    };
+
+    // Vertices
+    for (s32 i = 0; i != 4; ++i) {
+        s16 a = angle + ((i * 0x4000) - 0x6000);
+        sRadarArrowVtx[i].v.ob[0] = OMM_RENDER_RADAR_X + OMM_RENDER_RADAR_RADIUS * coss(angle + 0x4000) + OMM_RENDER_RADAR_ARROW_SIZE * OMM_INVSQRT2 * coss(a);
+        sRadarArrowVtx[i].v.ob[1] = OMM_RENDER_RADAR_Y + OMM_RENDER_RADAR_RADIUS * sins(angle + 0x4000) + OMM_RENDER_RADAR_ARROW_SIZE * OMM_INVSQRT2 * sins(a);
+    }
+
+    // Display list
+    gDPSetRenderMode(pos++, G_RM_AA_XLU_SURF, G_RM_AA_XLU_SURF2);
+    gDPSetCombineLERP(pos++, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0, TEXEL0, 0, ENVIRONMENT, 0);
+    gDPSetEnvColor(pos++, 0xFF, 0xFF, 0xFF, 0xFF);
+    gSPTexture(pos++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_ON);
+    gDPLoadTextureBlock(pos++, OMM_TEXTURE_HUD_ARROW, G_IM_FMT_RGBA, G_IM_SIZ_32b, 128, 128, 0, G_TX_CLAMP, G_TX_CLAMP, 0, 0, 0, 0);
+    gSPVertex(pos++, sRadarArrowVtx, 4, 0);
+    gSP2Triangles(pos++, 0, 1, 2, 0, 0, 2, 3, 0);
+    gDPSetRenderMode(pos++, G_RM_AA_ZB_OPA_SURF, G_RM_AA_ZB_OPA_SURF2);
+    gDPSetCombineLERP(pos++, 0, 0, 0, SHADE, 0, 0, 0, SHADE, 0, 0, 0, SHADE, 0, 0, 0, SHADE);
+    gDPSetEnvColor(pos++, 0xFF, 0xFF, 0xFF, 0xFF);
+    gSPTexture(pos++, 0xFFFF, 0xFFFF, 0, G_TX_RENDERTILE, G_OFF);
     return pos;
 }
 
