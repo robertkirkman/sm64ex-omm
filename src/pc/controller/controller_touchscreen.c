@@ -12,6 +12,9 @@
 #include "game/segment2.h"
 #include "gfx_dimensions.h"
 #include "pc/gfx/gfx_pc.h"
+#define OMM_ALL_HEADERS
+#include "data/omm/omm_includes.h"
+#undef OMM_ALL_HEADERS
 
 #include "controller_api.h"
 #include "controller_touchscreen.h"
@@ -76,6 +79,7 @@ static struct ControlElement ControlElements[CONTROL_ELEMENT_COUNT] = {
 [TOUCH_DDOWN] =      {.type = Button, .character = HUD_DOWN,     .buttonID = D_JPAD},
 [TOUCH_DLEFT] =      {.type = Button, .character = HUD_LEFT,     .buttonID = L_JPAD},
 [TOUCH_DRIGHT] =     {.type = Button, .character = HUD_RIGHT,    .buttonID = R_JPAD},
+[TOUCH_SPIN] =       {.type = Button, .character = HUD_LUA,      .buttonID = SPIN_BUTTON},
 };
 
 // config-only elements
@@ -330,6 +334,10 @@ ALIGNED8 const u8 texture_button_dark[] = {
 #include "textures/touchcontrols/touch_button_dark.rgba16.inc.c"
 };
 
+ALIGNED8 const u8 texture_hud_lua[] = {
+#include "textures/touchcontrols/custom_hud_lua.rgba16.inc.c"
+};
+
 // Sprite drawing code stolen from src/game/print.c
 
 static void select_button_texture(int dark) {
@@ -348,7 +356,11 @@ static void select_char_texture(u8 num) {
     const u8 *const *glyphs = segmented_to_virtual(main_hud_lut);
 
     gDPPipeSync(gDisplayListHead++);
-    gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, glyphs[num - 87]);
+    if (num < 87) {
+        gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, texture_hud_lua);
+    } else {
+        gDPSetTextureImage(gDisplayListHead++, G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, glyphs[num - 87]);
+    }
     gSPDisplayList(gDisplayListHead++, dl_hud_img_load_tex_block);
 }
 
@@ -495,7 +507,10 @@ static void touchscreen_read(OSContPad *pad) {
                     break;
                 case Button:
                     if (ControlElements[i].touchID) {
-                        pad->button |= ControlElements[i].buttonID;
+                        if (ControlElements[i].buttonID == SPIN_BUTTON)
+                            gOmmMario->spin.pressed |= true;
+                        else
+                            pad->button |= ControlElements[i].buttonID;
                     }
                     break;
             }

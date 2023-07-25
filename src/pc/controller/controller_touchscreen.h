@@ -25,8 +25,9 @@
 #define HUD_LEFT 134
 #define HUD_RIGHT 135
 #define HUD_MULTIPLY 137
+#define HUD_LUA 21
 
-#define CONTROL_ELEMENT_COUNT 18
+#define CONTROL_ELEMENT_COUNT 19
 #define CONTROL_CONFIG_ELEMENT_COUNT 4
 
 #define SCREEN_WIDTH_API 1280
@@ -69,6 +70,7 @@ enum ConfigControlElementIndex {
     TOUCH_DDOWN,
     TOUCH_DLEFT,
     TOUCH_DRIGHT,
+    TOUCH_SPIN,
 };
 
 enum ConfigControlConfigElementIndex {
